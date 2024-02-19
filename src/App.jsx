@@ -1,9 +1,9 @@
-import Product from "./product-app/product";
+import Calculator from "./project2/Calculator";
 
 function App() {
   return (
     <div>
-      <Product />;
+      <Calculator />
     </div>
   );
 }
