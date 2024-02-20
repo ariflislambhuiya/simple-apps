@@ -8,29 +8,27 @@
  */
 
 import { useState } from "react";
+import shortid from "shortid";
 
 const initialInputState = {
-  a: 0,
-  b: 0,
+  a: 10,
+  b: 20,
 };
 
 const Calculator = () => {
+  // function* generateId() {
+  //   let id = 0;
+  //   while (true) {
+  //     yield id++;
+  //   }
+  // }
+
+  // const getId = generateId();
+
   const [inputState, setInputState] = useState({ ...initialInputState });
   const [result, setResult] = useState(0);
-
-  const handleAllOperations = (operators) => {
-    // const f = new Function(
-    //   `operators`,
-    //   `return ${inputState.a} ${operators} ${inputState.b}`
-    // );
-    // setResult(f(operators));
-    setResult(eval(`${inputState.a} ${operators} ${inputState.b}`));
-  };
-
-  const handleClearOps = () => {
-    setInputState({ ...initialInputState });
-    setResult(0);
-  };
+  const [histories, setHistories] = useState([]);
+  const [restoredHistory, setRestoredHistory] = useState(null);
 
   // handleChange function
 
@@ -76,6 +74,44 @@ const Calculator = () => {
   //   });
   // };
 
+  const handleAllOperations = (operation) => {
+    if (!inputState.a || !inputState.b) {
+      alert("Invalid Input");
+      return;
+    }
+    const f = new Function(
+      `operation`,
+      `return ${inputState.a} ${operation} ${inputState.b}`
+    );
+
+    const result = f(operation);
+
+    setResult(result);
+    // setResult(eval(`${inputState.a} ${operators} ${inputState.b}`));
+
+    const historyItem = {
+      id: shortid.generate(),
+      inputs: { ...inputState },
+      operation,
+      result,
+      date: new Date(),
+    };
+
+    setHistories([historyItem, ...histories]);
+  };
+
+  const handleClearOps = () => {
+    setInputState({ ...initialInputState });
+    setResult(0);
+    setHistories([]);
+  };
+
+  const handleRestoreBtn = (historyItem) => {
+    setInputState({ ...historyItem.inputs });
+    setResult(historyItem.result);
+    setRestoredHistory(historyItem.id);
+  };
+
   return (
     <div style={{ width: "50%", margin: "0 auto" }}>
       <h1>Result : {result}</h1>
@@ -111,16 +147,39 @@ const Calculator = () => {
       </div>
       <div>
         <p>History</p>
-        <p>
-          <small>There no history</small>
-        </p>
-        <ul>
-          <li>
-            <p>Operations 10 + 20 ,Result = 30 </p>
-            <small>19/02/2024</small>
-            <button>Restore</button>
-          </li>
-        </ul>
+        {histories.length === 0 ? (
+          <p>
+            <small>There no history</small>
+          </p>
+        ) : (
+          <ul>
+            {histories.map((historyItem) => (
+              <li key={historyItem.id}>
+                <p>
+                  Operation:{historyItem.inputs.a}
+                  {historyItem.operation}
+                  {historyItem.inputs.b} Result = {""}
+                  {historyItem.result}
+                </p>
+                <small>
+                  {historyItem.date.toLocaleDateString()}
+                  {historyItem.date.toLocaleTimeString()}
+                </small>
+                <div>
+                  <button
+                    onClick={() => handleRestoreBtn(historyItem)}
+                    disabled={
+                      restoredHistory !== null &&
+                      restoredHistory === historyItem.id
+                    }
+                  >
+                    restore
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );
