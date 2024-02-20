@@ -1,7 +1,7 @@
 import shortid from "shortid";
 
 import { useState } from "react";
-import ListItem from "../components/ListItem";
+import ListItem from "./ListItem";
 
 const productList = [
   {
@@ -58,7 +58,8 @@ const Product = () => {
   const total = products.reduce((acc, cur) => acc + cur.total, 0);
 
   return (
-    <div>
+    <div style={{ width: "50%", margin: "0 auto" }}>
+      <h2>Project Apps</h2>
       <table>
         <thead>
           <tr>

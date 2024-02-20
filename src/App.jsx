@@ -1,4 +1,4 @@
-import Product from "./product-app/product";
+import Product from "./project1/product";
 
 function App() {
   return (
