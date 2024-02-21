@@ -1,9 +1,9 @@
-import Calculator from "./project2/Calculator";
+import App3 from "./project3/App3";
 
 function App() {
   return (
     <div>
-      <Calculator />
+      <App3 />
     </div>
   );
 }

@@ -2,6 +2,7 @@ module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: [
+    'https://eslint.org/docs/latest/rules/no-unused-vars'=0,
     'eslint:recommended',
     'plugin:react/recommended',
     'plugin:react/jsx-runtime',
